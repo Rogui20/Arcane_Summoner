@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=lower": { "model": "arcane_summoner:block/magic_wand_altar_pillar" },
+    "half=upper": { "model": "minecraft:block/glowstone" }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "N",
+    "G",
+    "S"
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "G": {
+      "item": "minecraft:glowstone"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "arcane_summoner:magic_wand_altar",
+    "count": 1
+  }
+}

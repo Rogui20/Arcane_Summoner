@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[47,)" # Forge 1.20.1 usa FML 47.x
+license="MIT"
+issueTrackerURL="https://github.com/seu-repo/arcane_summoner/issues"
+
+[[mods]]
+modId="arcane_summoner"
+version="1.0.0"
+displayName="Arcane Summoner"
+updateJSONURL=""
+displayURL="https://github.com/seu-repo/arcane_summoner"
+logoFile="logo.png"
+credits="Criado com ajuda do ChatGPT :)"
+authors="Rogui20"
+
+description='''
+Arcane Summoner adiciona um altar mágico ao Minecraft,
+permitindo criar mobs personalizados usando recursos e itens.
+'''
+
+[[dependencies.arcane_summoner]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.arcane_summoner]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1]"
+    ordering="NONE"
+    side="BOTH"

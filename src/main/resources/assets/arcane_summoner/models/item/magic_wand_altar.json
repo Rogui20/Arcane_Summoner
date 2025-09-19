@@ -1,0 +1,33 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "pillar": "arcane_summoner:block/altar_pillar",
+    "upper": "minecraft:block/glowstone"
+  },
+  "elements": [
+    {
+      "from": [6, 0, 6],
+      "to":   [10, 16, 10],
+      "faces": {
+        "north": { "texture": "#pillar" },
+        "south": { "texture": "#pillar" },
+        "west":  { "texture": "#pillar" },
+        "east":  { "texture": "#pillar" },
+        "up":    { "texture": "#pillar" },
+        "down":  { "texture": "#pillar" }
+      }
+    },
+    {
+      "from": [0, 16, 0],
+      "to":   [16, 32, 16],
+      "faces": {
+        "north": { "texture": "#upper" },
+        "south": { "texture": "#upper" },
+        "west":  { "texture": "#upper" },
+        "east":  { "texture": "#upper" },
+        "up":    { "texture": "#upper" },
+        "down":  { "texture": "#upper" }
+      }
+    }
+  ]
+}
