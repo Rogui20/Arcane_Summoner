@@ -1,5 +1,8 @@
 package com.example.arcane_summoner.summon;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.example.arcane_summoner.api.ISkinnable;
 import com.example.arcane_summoner.config.ModConfig;
 import com.example.arcane_summoner.content.block.entity.MagicWandAltarBlockEntity;
@@ -9,7 +12,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
@@ -120,21 +125,38 @@ public class SummonHelper {
         // Slot 11 → Poder especial
         ItemStack power = altar.getItem(11);
 
-        // 7) Poções (slots 12–13)
+        Map<MobEffect, Integer> amplifierMap = new HashMap<>();
+
         for (int slot = 12; slot <= 13; slot++) {
             ItemStack potion = altar.getItem(slot);
             if (!potion.isEmpty() && potion.getItem() instanceof PotionItem) {
                 for (MobEffectInstance eff : PotionUtils.getMobEffects(potion)) {
                     if (eff != null) {
-                        mob.addEffect(new MobEffectInstance(
-                                eff.getEffect(),
-                                999999,
-                                Math.max(0, eff.getAmplifier()),
-                                true,
-                                true));
+                        MobEffect effect = eff.getEffect();
+
+                        // Cura especial → vira regeneração II
+                        if (effect == MobEffects.HEAL) {
+                            effect = MobEffects.REGENERATION;
+                            amplifierMap.merge(effect, 1, Integer::sum); // nível base 2
+                        } else {
+                            amplifierMap.merge(effect, eff.getAmplifier(), Integer::sum);
+                        }
                     }
                 }
             }
+        }
+
+        // aplicar os efeitos acumulados
+        for (Map.Entry<MobEffect, Integer> entry : amplifierMap.entrySet()) {
+            MobEffect effect = entry.getKey();
+            int amplifier = entry.getValue();
+
+            mob.addEffect(new MobEffectInstance(
+                    effect,
+                    999999,
+                    amplifier,
+                    true,
+                    true));
         }
 
         // 9) Aplicar atributos finais
@@ -163,16 +185,16 @@ public class SummonHelper {
                 mob,
                 behaviorBase,
                 subBehavior,
-                !elytra.isEmpty() && elytra.getItem() == Items.ELYTRA,
+                !elytra.isEmpty() && elytra.getItem() == Items.ENDER_PEARL,
                 power.isEmpty() ? ""
-                        : (power.getItem() == Items.FIRE_CHARGE ? "fireball"
-                                : power.getItem() == Items.NETHER_STAR ? "wither" : ""),
+                        : (power.getItem() == Items.ENDER_PEARL ? "fireball"
+                                : power.getItem() == Items.WITHER_SKELETON_SKULL ? "wither" : ""),
                 extraArmor,
                 extraHealth,
                 extraStrength);
 
         // 11) Spawn
-        if (!elytra.isEmpty() && elytra.getItem() == Items.ELYTRA) {
+        if (!elytra.isEmpty() && elytra.getItem() == Items.ENDER_PEARL) {
             mob.addEffect(new MobEffectInstance(net.minecraft.world.effect.MobEffects.JUMP, 999999, 1, true, false));
             mob.addEffect(
                     new MobEffectInstance(net.minecraft.world.effect.MobEffects.SLOW_FALLING, 999999, 0, true, false));
@@ -182,7 +204,7 @@ public class SummonHelper {
         if (!power.isEmpty()) {
             if (power.getItem() == Items.FIRE_CHARGE) {
                 mob.goalSelector.addGoal(4, new ShootProjectileGoal(mob, 60, false));
-            } else if (power.getItem() == Items.NETHER_STAR) {
+            } else if (power.getItem() == Items.WITHER_SKELETON_SKULL) {
                 mob.goalSelector.addGoal(4, new ShootProjectileGoal(mob, 100, true));
             }
         }
@@ -201,15 +223,18 @@ public class SummonHelper {
             }
         }
 
-        //if (mob instanceof ISkinnable skinnable) {
-        //    String skin = ModConfig.getRandomSkin(mobId, behaviorBase, level.random);
-        //    if (skin != null) {
-        //        skinnable.setSkin(new ResourceLocation(skin));
-        //        System.out.println("Skin aplicada.");
-        //    } else {
-        //        System.out.println("Skin não encontrada.");
-        //    }
-        //}
+        // if (mob instanceof ISkinnable skinnable) {
+        // String skin = ModConfig.getRandomSkin(mobId, behaviorBase, level.random);
+        // if (skin != null) {
+        // skinnable.setSkin(new ResourceLocation(skin));
+        // System.out.println("Skin aplicada.");
+        // } else {
+        // System.out.println("Skin não encontrada.");
+        // }
+        // }
+
+        mob.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 999999, 0, true, false));
+
 
         mob.setPersistenceRequired();
         level.addFreshEntity(mob);

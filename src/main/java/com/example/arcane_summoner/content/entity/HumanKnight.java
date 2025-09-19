@@ -9,25 +9,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
-public class HumanKnight extends Monster implements ISkinnable {
+public class HumanKnight extends PathfinderMob {
 
-    private ResourceLocation skin;
-
-    public HumanKnight(EntityType<? extends Monster> type, Level level) {
+    public HumanKnight(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
     }
 
-    @Override
-    public void setSkin(ResourceLocation skin) {
-        this.skin = skin;
-    }
-
-    @Override
-    public ResourceLocation getSkin() {
-        return skin; // pode ser null
-    }
-
-    /** Atributos base */
     public static AttributeSupplier.Builder createAttributes() {
         return PathfinderMob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
@@ -35,5 +22,5 @@ public class HumanKnight extends Monster implements ISkinnable {
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ARMOR, 2.0D);
     }
-    
+
 }

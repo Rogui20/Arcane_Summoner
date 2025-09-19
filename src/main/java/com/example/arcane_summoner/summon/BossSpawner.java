@@ -90,6 +90,7 @@ public class BossSpawner {
         boss.getPersistentData().putBoolean("ArcaneSummonerElytraBuff", hasElytra);
         boss.getPersistentData().putString("ArcaneSummonerPower", power);
         boss.getPersistentData().putString("ArcaneSummonerPotions", String.join(",", potions));
+        boss.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 999999, 0, true, false));
 
         boss.setPersistenceRequired();
         level.addFreshEntity(boss);
@@ -316,6 +317,9 @@ public class BossSpawner {
             pm.targetSelector.addGoal(1, new HurtByTargetGoal(pm));
             pm.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(pm, Player.class, true));
         }
+
+        boss.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 999999, 0, true, false));
+
 
         boss.setPersistenceRequired();
     }

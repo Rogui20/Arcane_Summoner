@@ -184,18 +184,16 @@ public class ConfigGenerator {
                     "minecraft:netherite_boots"));
             defaults.put("7", List.of(
                     "#forge:swords",
-                    "minecraft:bow",
                     "#minecraft:swords",
                     "#minecraft:axe"));
             defaults.put("8", List.of(
                     "#forge:swords",
-                    "minecraft:bow",
                     "#minecraft:swords",
                     "#minecraft:axe",
                     "minecraft:shield"));
-            defaults.put("9", List.of("minecraft:book", "minecraft:written_book"));
-            defaults.put("10", List.of("minecraft:elytra"));
-            defaults.put("11", List.of("minecraft:nether_star", "minecraft:ghast_tear"));
+            defaults.put("9", List.of("minecraft:writable_book", "minecraft:written_book"));
+            defaults.put("10", List.of("minecraft:ender_pearl"));
+            defaults.put("11", List.of("minecraft:wither_skeleton_skull"));
             defaults.put("12", List.of(
                     "minecraft:potion",
                     "minecraft:splash_potion",

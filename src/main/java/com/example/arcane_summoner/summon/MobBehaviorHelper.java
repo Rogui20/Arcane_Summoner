@@ -3,6 +3,7 @@ package com.example.arcane_summoner.summon;
 import com.example.arcane_summoner.config.ModConfig;
 import com.example.arcane_summoner.summon.WeaponGoalHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -41,14 +42,15 @@ public class MobBehaviorHelper {
             case "friendly" -> {
                 // Ataca apenas monstros, exceto outros Friendly
                 pathfinderMob.targetSelector.addGoal(1,
-                        new NearestAttackableTargetGoal<>(pathfinderMob, Monster.class, 10, true, false,
+                        new NearestAttackableTargetGoal<>(pathfinderMob, LivingEntity.class, 10, true, false,
                                 target -> {
-                                    if (target.getCustomName() != null) {
-                                        String name = target.getCustomName().getString();
-                                        String friendlyName = ModConfig.getBehaviorName("friendly").getString();
-                                        return !name.equals(friendlyName);
-                                    }
-                                    return true;
+                                    if (target instanceof Monster)
+                                        return true; // vanilla hostile
+                                    if (BehaviorUtil.isHostile(target))
+                                        return true; // custom hostile
+                                    if (BehaviorUtil.isNeutral(target))
+                                        return true; // opcional, depende da regra
+                                    return false;
                                 }));
 
                 pathfinderMob.targetSelector.addGoal(2, new FriendlyHurtByTargetGoal(pathfinderMob));
@@ -72,7 +74,16 @@ public class MobBehaviorHelper {
             }
             case "hostile" -> {
                 pathfinderMob.targetSelector.addGoal(1,
-                        new NearestAttackableTargetGoal<>(pathfinderMob, Player.class, true));
+                        new NearestAttackableTargetGoal<>(pathfinderMob, LivingEntity.class, 10, true, false,
+                                target -> {
+                                    if (target instanceof Player)
+                                        return true;
+                                    if (BehaviorUtil.isFriendly(target))
+                                        return true;
+                                    if (BehaviorUtil.isNeutral(target))
+                                        return true;
+                                    return false;
+                                }));
                 pathfinderMob.targetSelector.addGoal(2, new HurtByTargetGoal(pathfinderMob));
 
                 pathfinderMob.goalSelector.addGoal(1, new FloatGoal(pathfinderMob));

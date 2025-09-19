@@ -20,8 +20,7 @@ public class HumanKnightRenderer extends HumanoidMobRenderer<HumanKnight, Humano
 
     @Override
     public ResourceLocation getTextureLocation(HumanKnight entity) {
-        ResourceLocation skin = entity.getSkin();
-        return skin != null ? skin : DEFAULT;
+        return DEFAULT;
     }
 
 }

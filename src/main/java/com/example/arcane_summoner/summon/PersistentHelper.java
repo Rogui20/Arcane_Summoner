@@ -162,6 +162,8 @@ public class PersistentHelper {
                 }
             }
         }
+        mob.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 999999, 0, true, false));
+
     }
 
 }
