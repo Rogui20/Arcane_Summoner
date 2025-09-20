@@ -38,11 +38,11 @@ public class ArcaneEvents {
         }
 
         // Elytra Buff (só para summonados comuns, não bosses)
-        if (PersistentHelper.isSummonedMob(mob)
-                && mob.getPersistentData().getBoolean("ArcaneSummonerElytraBuff")
-                && !mob.getPersistentData().getBoolean("ArcaneSummonerBoss")) {
-            mob.spawnAtLocation(new ItemStack(Items.ELYTRA));
-        }
+        //if (PersistentHelper.isSummonedMob(mob)
+        //        && mob.getPersistentData().getBoolean("ArcaneSummonerElytraBuff")
+        //        && !mob.getPersistentData().getBoolean("ArcaneSummonerBoss")) {
+        //    mob.spawnAtLocation(new ItemStack(Items.ELYTRA));
+        //}
     }
     @SubscribeEvent
     public static void onPlayerKilled(LivingDeathEvent event) {

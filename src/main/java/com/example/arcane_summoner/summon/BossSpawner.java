@@ -13,7 +13,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.WitherSkeleton;
@@ -72,7 +74,11 @@ public class BossSpawner {
         pm.goalSelector.addGoal(2, new MeleeAttackGoal(pm, 1.15, false));
         pm.targetSelector.addGoal(1, new HurtByTargetGoal(pm));
         pm.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(pm, Player.class, true));
-
+        pm.goalSelector.addGoal(1, new FloatGoal(pm));
+        pm.goalSelector.addGoal(5, new RandomStrollGoal(pm, 1.0)); // andar aleatório
+        if (pm.getAttribute(Attributes.FOLLOW_RANGE) != null) {
+            pm.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32.0D); // aumenta pra 32 blocos
+        }
         boss.setTarget(target);
 
         // 8) Nome
@@ -316,10 +322,14 @@ public class BossSpawner {
             pm.goalSelector.addGoal(2, new MeleeAttackGoal(pm, 1.15, false));
             pm.targetSelector.addGoal(1, new HurtByTargetGoal(pm));
             pm.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(pm, Player.class, true));
+            pm.goalSelector.addGoal(1, new FloatGoal(pm));
+            pm.goalSelector.addGoal(5, new RandomStrollGoal(pm, 1.0)); // andar aleatório
+            if (pm.getAttribute(Attributes.FOLLOW_RANGE) != null) {
+                pm.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32.0D); // aumenta pra 32 blocos
+            }
         }
 
         boss.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 999999, 0, true, false));
-
 
         boss.setPersistenceRequired();
     }

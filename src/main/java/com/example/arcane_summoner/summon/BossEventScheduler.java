@@ -15,7 +15,6 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = ArcaneSummoner.MODID)
 public class BossEventScheduler {
 
-    private static final Map<ServerLevel, Long> nextTriggerByLevel = new HashMap<>();
     private static final Random RNG = new Random();
 
     @SubscribeEvent
@@ -25,25 +24,34 @@ public class BossEventScheduler {
 
         var server = event.getServer();
         for (ServerLevel level : server.getAllLevels()) {
-            long now = level.getDayTime(); // ticks do mundo (conta dormir, mas usaremos gatilho por período)
-            long next = nextTriggerByLevel.computeIfAbsent(level, l -> computeNextTriggerTicks(level, now));
+            long now = level.getDayTime();
 
+            BossSchedulerData data = BossSchedulerData.get(level);
+            long next = data.getNextTrigger();
+
+            // Se ainda não foi programado, calcula
+            if (next < 0) {
+                next = computeNextTriggerTicks(now);
+                data.setNextTrigger(next);
+            }
+
+            // Se chegou a hora
             if (now >= next) {
-                // tentar spawnar 1 boss por player online naquele level
                 for (ServerPlayer sp : level.players()) {
-                    double mult = ModConfig.nextBossMultiplier(); // aleatório entre [min,max]
+                    double mult = ModConfig.nextBossMultiplier();
                     BossSpawner.spawnBossFor(sp, mult);
                 }
-                // reprograma
-                nextTriggerByLevel.put(level, computeNextTriggerTicks(level, now));
+                // Reagenda
+                long newNext = computeNextTriggerTicks(now);
+                data.setNextTrigger(newNext);
             }
         }
     }
 
-    private static long computeNextTriggerTicks(ServerLevel level, long now) {
+    private static long computeNextTriggerTicks(long now) {
         int dmin = ModConfig.getBossRandomDaysMin();
         int dmax = ModConfig.getBossRandomDaysMax();
         int days = dmin + RNG.nextInt(Math.max(1, (dmax - dmin + 1)));
-        return now + (days * 24000L);
+        return now + (days * 24000L); // 1 dia = 24000 ticks
     }
 }

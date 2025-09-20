@@ -187,7 +187,7 @@ public class SummonHelper {
                 subBehavior,
                 !elytra.isEmpty() && elytra.getItem() == Items.ENDER_PEARL,
                 power.isEmpty() ? ""
-                        : (power.getItem() == Items.ENDER_PEARL ? "fireball"
+                        : (power.getItem() == Items.FIRE_CHARGE ? "fireball"
                                 : power.getItem() == Items.WITHER_SKELETON_SKULL ? "wither" : ""),
                 extraArmor,
                 extraHealth,

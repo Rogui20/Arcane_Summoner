@@ -34,6 +34,7 @@ public class ConfigGenerator {
             generateBossConfig(baseDir); // <-- aqui passa o diretório
             generateSummonRules(baseDir.resolve("summon_rules.json"));
             generateMobSkins(baseDir);
+            generateProceduralDifficultyConfig(baseDir.resolve("procedural_difficulty.json"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -309,8 +310,8 @@ public class ConfigGenerator {
                       ],
 
                       "random_events_enabled": true,
-                      "random_days_min": 7,
-                      "random_days_max": 28,
+                      "random_days_min": 4,
+                      "random_days_max": 7,
                       "max_kills": 10,
                       "equipments_drop_chance": 0.1
                     }
@@ -355,6 +356,21 @@ public class ConfigGenerator {
             Files.writeString(file, json);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+        
+    private static void generateProceduralDifficultyConfig(Path path) throws Exception {
+        if (!Files.exists(path)) {
+            Map<String, Object> defaults = new HashMap<>();
+            defaults.put("enable_procedural_difficulty", true);
+            defaults.put("multiplier_added_per_hostile_spawned", 0.025);
+            defaults.put("multiplier_lost_per_player_killed", 70.0);
+            defaults.put("max_multiplier", 500.0);
+            defaults.put("starting_multiplier", 1.0);
+
+            try (FileWriter writer = new FileWriter(path.toFile())) {
+                GSON.toJson(defaults, writer);
+            }
         }
     }
 

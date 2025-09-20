@@ -1,6 +1,8 @@
 package com.example.arcane_summoner.registry;
 
 import com.example.arcane_summoner.ArcaneSummoner;
+import com.example.arcane_summoner.procedural_difficulty.DifficultyCommand;
+import com.example.arcane_summoner.summon.BossCommand;
 import com.example.arcane_summoner.summon.BossSpawner;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import net.minecraft.commands.Commands;
@@ -36,6 +38,9 @@ public class ModCommands {
                         })
                     )
                 )
+                
         );
+        BossCommand.register(event.getDispatcher());
+        DifficultyCommand.register(event.getDispatcher());
     }
 }

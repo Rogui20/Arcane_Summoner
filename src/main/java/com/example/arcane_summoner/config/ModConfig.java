@@ -43,6 +43,7 @@ public class ModConfig {
     private static final Map<String, List<String>> MOB_SKINS = new HashMap<>();
     private static JsonObject bossConfig;
     private static JsonObject summonRulesConfig;
+    private static JsonObject proceduralDifficultyConfig;
 
     // Carrega todos os arquivos JSON
     public static void load(Path configDir) {
@@ -93,6 +94,13 @@ public class ModConfig {
         } catch (Exception e) {
             e.printStackTrace();
             summonRulesConfig = new JsonObject();
+        }
+        Path procFile = baseDir.resolve("procedural_difficulty.json");
+        try (Reader r = Files.newBufferedReader(procFile)) {
+            proceduralDifficultyConfig = JsonParser.parseReader(r).getAsJsonObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            proceduralDifficultyConfig = new JsonObject();
         }
 
         System.out.println("[ArcaneSummoner] Configs carregadas de: " + configDir.toAbsolutePath());
@@ -328,6 +336,27 @@ public class ModConfig {
         if (skins.isEmpty())
             return null;
         return skins.get(random.nextInt(skins.size()));
+    }
+
+    public static boolean isProceduralEnabled() {
+        return proceduralDifficultyConfig.has("enable_procedural_difficulty")
+                && proceduralDifficultyConfig.get("enable_procedural_difficulty").getAsBoolean();
+    }
+
+    public static double getMultiplierPerHostile() {
+        return proceduralDifficultyConfig.get("multiplier_added_per_hostile_spawned").getAsDouble();
+    }
+
+    public static double getMultiplierLostPerDeath() {
+        return proceduralDifficultyConfig.get("multiplier_lost_per_player_killed").getAsDouble();
+    }
+
+    public static double getMaxMultiplier() {
+        return proceduralDifficultyConfig.get("max_multiplier").getAsDouble();
+    }
+
+    public static double getStartingMultiplier() {
+        return proceduralDifficultyConfig.get("starting_multiplier").getAsDouble();
     }
 
 }
